@@ -1,22 +1,28 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { useToast } from "hooks/toast";
+import { logging } from "src/utils/logging";
 
 export interface ErrorProps {
   error: string;
+  data?: unknown;
   redirect?: string;
 }
 
 export type WithErrorProps<P> = P | ErrorProps;
 
-export function ErrorHandler({ error, redirect }: ErrorProps) {
+export function ErrorHandler({ error, data, redirect }: ErrorProps) {
   const { show } = useToast();
   const router = useRouter();
   const handled = useRef(false);
 
   useEffect(() => {
     if (!handled.current) {
-      show({ content: error, error: true });
+      logging.error(error, data);
+      const content = data
+        ? `${error}\n\n${JSON.stringify(data, null, 2)}`
+        : error;
+      show({ content, error: true });
 
       if (redirect) {
         router.replace(redirect);

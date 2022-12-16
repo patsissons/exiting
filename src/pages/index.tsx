@@ -5,13 +5,13 @@ import {
   WithErrorProps,
 } from "components/ErrorHandler";
 import { ExitTimeline } from "components/ExitTimeline";
-import { Exit } from "types";
-import { isDevelopment } from "utils/env";
-import { logging } from "utils/logging";
 import { PageContainer } from "components/PageContainer";
+import { queryTable } from "services/supabase";
+import { ExitRow } from "types";
+import { logging } from "utils/logging";
 
 export type Props = WithErrorProps<{
-  exits: Exit[];
+  exits: ExitRow[];
 }>;
 
 export default function IndexPage(props: Props) {
@@ -34,29 +34,20 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> {
   logging.debug("D", { resolvedUrl });
 
-  if (isDevelopment) {
+  const result = await queryTable("exits");
+
+  if (result.error) {
     return {
       props: {
-        exits: [
-          {
-            id: "test",
-            markdown: `
-  # test exit
-
-  this is a test
-  `.trimStart(),
-            tags: ["test", "testing"],
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ],
+        error: result.error.message,
+        data: result,
       },
     };
   }
 
   return {
     props: {
-      error: "GET_exits not yet implemented",
+      exits: result.data,
     },
   };
 }

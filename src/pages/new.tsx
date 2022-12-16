@@ -1,6 +1,6 @@
 import { ExitEditor } from "components/ExitEditor";
-import { PageContainer } from "src/components/PageContainer";
-import { Exit, ExitContent } from "types";
+import { PageContainer } from "components/PageContainer";
+import { ExitInsert, ExitRow, ExitUpdate } from "types";
 
 export default function NewPage() {
   return (
@@ -12,7 +12,9 @@ export default function NewPage() {
     </PageContainer>
   );
 
-  async function handlePost(_content: ExitContent): Promise<Exit> {
+  async function handlePost(
+    _content: ExitInsert | ExitUpdate
+  ): Promise<ExitRow> {
     throw new Error("POST_exit not yet implemented");
   }
 }

@@ -5,13 +5,13 @@ import {
   WithErrorProps,
 } from "components/ErrorHandler";
 import { ExitPresenter } from "components/ExitPresenter";
-import { Exit } from "types";
-import { isDevelopment } from "utils/env";
+import { PageContainer } from "components/PageContainer";
+import { queryTable } from "services/supabase";
+import { ExitRow } from "types";
 import { logging } from "utils/logging";
-import { PageContainer } from "src/components/PageContainer";
 
 export type Props = WithErrorProps<{
-  exit: Exit;
+  exit: ExitRow;
 }>;
 
 export default function ExitPage(props: Props) {
@@ -30,31 +30,34 @@ export default function ExitPage(props: Props) {
 
 export async function getServerSideProps({
   resolvedUrl,
-}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> {
-  logging.debug("D", { resolvedUrl });
+  params: { exit: exitId } = {},
+}: GetServerSidePropsContext<{ exit?: string }>): Promise<
+  GetServerSidePropsResult<Props>
+> {
+  logging.debug("D", { resolvedUrl, exitId });
 
-  if (isDevelopment && resolvedUrl === "/test") {
+  if (!exitId) {
     return {
       props: {
-        exit: {
-          id: "test",
-          markdown: `
-# test exit
+        error: "Invalid exit ID",
+      },
+    };
+  }
 
-this is a test
-`.trimStart(),
-          tags: ["test", "testing"],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
+  const result = await queryTable("exits").filter("id", "eq", exitId);
+
+  if (result.error) {
+    return {
+      props: {
+        error: result.error.message,
+        data: result,
       },
     };
   }
 
   return {
     props: {
-      error: "GET_exit not yet implemented",
-      redirect: "/",
+      exit: result.data[0],
     },
   };
 }

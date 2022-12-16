@@ -6,14 +6,16 @@ import {
   WithErrorProps,
 } from "components/ErrorHandler";
 import { ExitTimeline } from "components/ExitTimeline";
+import { PageContainer } from "components/PageContainer";
 import { Tags } from "components/Tags";
-import { Exit } from "types";
-import { isDevelopment } from "utils/env";
+import { queryTable } from "services/supabase";
+import { ExitRow } from "types";
 import { logging } from "utils/logging";
-import { PageContainer } from "src/components/PageContainer";
+import { sanitizeTag } from "utils/tags";
+import { arrayParam } from "src/utils/supabase";
 
 export type Props = WithErrorProps<{
-  exits: Exit[];
+  exits: ExitRow[];
 }>;
 
 export default function TagsPage(props: Props) {
@@ -23,7 +25,6 @@ export default function TagsPage(props: Props) {
     return <ErrorHandler {...props} />;
   }
 
-  logging.debug("D", { router });
   const { tags = "" } = router.query;
   const tagList = Array.isArray(tags) ? tags : tags.split(",");
 
@@ -40,32 +41,40 @@ export default function TagsPage(props: Props) {
 
 export async function getServerSideProps({
   resolvedUrl,
-}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> {
-  logging.debug("D", { resolvedUrl });
+  params: { tags: tagsParam } = {},
+}: GetServerSidePropsContext<{ tags?: string }>): Promise<
+  GetServerSidePropsResult<Props>
+> {
+  logging.debug("D", { resolvedUrl, tagsParam });
 
-  if (isDevelopment) {
+  if (!tagsParam) {
     return {
       props: {
-        exits: [
-          {
-            id: "test",
-            markdown: `
-# test exit
+        error: "Invalid tag selection",
+      },
+    };
+  }
 
-this is a test
-`.trimStart(),
-            tags: ["test", "testing"],
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ],
+  const tags = decodeURIComponent(tagsParam).split(",").map(sanitizeTag);
+
+  const result = await queryTable("exits").filter(
+    "tags",
+    "cs",
+    arrayParam(tags)
+  );
+
+  if (result.error) {
+    return {
+      props: {
+        error: result.error.message,
+        data: result,
       },
     };
   }
 
   return {
     props: {
-      error: "GET_exits_by_tag not yet implemented",
+      exits: result.data,
     },
   };
 }

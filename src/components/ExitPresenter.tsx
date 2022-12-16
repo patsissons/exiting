@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, Card, Stack } from "@shopify/polaris";
-import { Exit } from "types";
+import { ExitRow } from "types";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { Tags } from "./Tags";
 
 export interface Props {
-  exit: Exit;
+  exit: ExitRow;
 }
 
 export function ExitPresenter({ exit: { id, markdown, tags } }: Props) {
@@ -15,9 +15,7 @@ export function ExitPresenter({ exit: { id, markdown, tags } }: Props) {
       </Card.Section>
       <Card.Section>
         <Stack>
-          <Stack.Item fill>
-            <Tags tags={tags} />
-          </Stack.Item>
+          <Stack.Item fill>{tags && <Tags tags={tags} />}</Stack.Item>
           <ButtonGroup>
             <Button url={`/${id}`} plain>
               Permalink

@@ -6,7 +6,7 @@ import {
   submitFail,
 } from "@shopify/react-form";
 import { MarkdownEditor } from "./MarkdownEditor";
-import { Exit, ExitContent } from "types";
+import { ExitInsert, ExitRow, ExitUpdate } from "types";
 import { sanitizeTag } from "utils/tags";
 import { logging } from "utils/logging";
 import { useToast } from "hooks/toast";
@@ -22,8 +22,8 @@ const defaultMarkdown = `
 `.trimStart();
 
 export interface Props {
-  exit?: ExitContent;
-  post(exit: ExitContent): Promise<Exit>;
+  exit?: ExitInsert | ExitUpdate;
+  post(exit: ExitInsert | ExitUpdate): Promise<ExitRow>;
 }
 
 export function ExitEditor({ exit, post }: Props) {
@@ -41,7 +41,7 @@ export function ExitEditor({ exit, post }: Props) {
   } = useForm({
     fields: {
       markdown: useField(exit?.markdown || defaultMarkdown),
-      tags: useField(exit ? exit.tags.join(",") : ""),
+      tags: useField(exit?.tags ? exit.tags.join(",") : ""),
     },
     onSubmit: async ({ markdown, tags }) => {
       try {
