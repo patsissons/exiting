@@ -47,7 +47,7 @@ export function ExitEditor({ exit, submitExit }: Props) {
       markdown: useField(exit?.markdown || defaultMarkdown),
       tags: useField(exit?.tags ? exit.tags.join(",") : ""),
     },
-    onSubmit: async ({ markdown, tags: tagList }) => {
+    onSubmit: async ({ markdown, tags: tagList = "" }) => {
       try {
         setSubmitting(true);
         setSubmitError(undefined);
