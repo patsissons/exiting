@@ -22,11 +22,3 @@
   --p-surface-critical-subdued: var(--p-surface-neutral-subdued-dark);
   --p-surface-highlight-subdued: var(--p-surface-neutral-subdued-dark);
 }
-
-.theme-toggle {
-  position: fixed;
-  left: 50%;
-  top: 5px;
-  transform: translate(-50%, 0);
-  z-index: 1000;
-}

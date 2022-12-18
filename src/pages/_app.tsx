@@ -5,7 +5,6 @@ import { ThemeProvider } from "next-themes";
 import { PolarisProvider } from "components/PolarisProvider";
 import { ToastsProvider } from "components/ToastsProvider";
 import Head from "next/head";
-import { ThemeToggle } from "components/ThemeToggle";
 
 export interface Props {
   initialSession: Session;
@@ -43,7 +42,6 @@ export default function App({ Component, pageProps }: AppProps<Props>) {
             <meta name="msapplication-TileColor" content="#da532c" />
             <meta name="theme-color" content="#ffffff" />
           </Head>
-          <ThemeToggle />
           <Component {...pageProps} />
         </ToastsProvider>
       </PolarisProvider>

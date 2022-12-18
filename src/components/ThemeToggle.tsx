@@ -21,24 +21,20 @@ export function ThemeToggle() {
   }
 
   return (
-    <div className="theme-toggle">
-      <ButtonGroup segmented>
-        <Button
-          size="slim"
-          pressed={resolvedTheme === "light"}
-          onClick={() => handleThemeToggle("light")}
-        >
-          ☀
-        </Button>
-        <Button
-          size="slim"
-          pressed={resolvedTheme === "dark"}
-          onClick={() => handleThemeToggle("dark")}
-        >
-          ☾
-        </Button>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup segmented>
+      <Button
+        pressed={resolvedTheme === "light"}
+        onClick={() => handleThemeToggle("light")}
+      >
+        ☀
+      </Button>
+      <Button
+        pressed={resolvedTheme === "dark"}
+        onClick={() => handleThemeToggle("dark")}
+      >
+        ☾
+      </Button>
+    </ButtonGroup>
   );
 
   function handleThemeToggle(theme: "light" | "dark") {
