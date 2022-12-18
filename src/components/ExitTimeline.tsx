@@ -1,8 +1,8 @@
-import { ExitRow } from "types";
+import { ExitContent } from "types";
 import { ExitPresenter } from "./ExitPresenter";
 
 export interface Props {
-  exits: ExitRow[];
+  exits: ExitContent[];
 }
 
 export function ExitTimeline({ exits }: Props) {

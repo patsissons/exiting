@@ -9,13 +9,12 @@ import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
 import { Tags } from "components/Tags";
 import { queryTable } from "services/supabase";
-import { ExitRow } from "types";
-import { logging } from "utils/logging";
+import { ExitContent } from "types";
+import { arrayParam } from "utils/supabase";
 import { sanitizeTag } from "utils/tags";
-import { arrayParam } from "src/utils/supabase";
 
 export type Props = WithErrorProps<{
-  exits: ExitRow[];
+  exits: ExitContent[];
 }>;
 
 export default function TagsPage(props: Props) {
@@ -40,13 +39,10 @@ export default function TagsPage(props: Props) {
 }
 
 export async function getServerSideProps({
-  resolvedUrl,
   params: { tags: tagsParam } = {},
 }: GetServerSidePropsContext<{ tags?: string }>): Promise<
   GetServerSidePropsResult<Props>
 > {
-  logging.debug("D", { resolvedUrl, tagsParam });
-
   if (!tagsParam) {
     return {
       props: {

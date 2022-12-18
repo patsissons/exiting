@@ -6,12 +6,10 @@ import {
   handleSupabaseApiError,
   ResponseError,
 } from "utils/api";
-import { arrayParam } from "utils/supabase";
-import { sanitizeTag } from "utils/tags";
 
 export interface ResponseData {
-  type: "exits";
-  data: ExitContent[];
+  type: "exit";
+  data: ExitContent;
 }
 
 export default async function handler(
@@ -24,38 +22,20 @@ export default async function handler(
       return;
     }
 
-    const tags = tagsFilter();
+    const id = String(req.query.id);
 
-    let query = queryTable("exits");
-    if (tags) {
-      query = query.filter("tags", "cs", arrayParam(tags));
-    }
-
-    const result = await query;
+    const result = await queryTable("exits").eq("id", id);
     if (!handleSupabaseApiError(res, result, { data: true })) {
       return;
     }
 
-    const { data } = result;
-
     res.status(200).json({
-      type: "exits",
-      data,
+      type: "exit",
+      data: result.data[0],
     });
   } catch (error) {
     handleApiError(res, {
       error: error instanceof Error ? error.message : "Unknown error",
     });
-  }
-
-  function tagsFilter() {
-    const tagsParam = req.query.tags;
-    if (!tagsParam) return;
-
-    if (Array.isArray(tagsParam)) {
-      return tagsParam.map((tag) => sanitizeTag(decodeURIComponent(tag)));
-    }
-
-    return decodeURIComponent(tagsParam).split(",").map(sanitizeTag);
   }
 }

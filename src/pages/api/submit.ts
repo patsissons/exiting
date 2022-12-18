@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ExitRow, ExitInsert, ExitUpdate } from "types";
-import { saveExit } from "services/supabase";
+import { saveExit, saveExitTags } from "services/supabase";
 import {
   handleApiError,
   handleSupabaseApiError,
@@ -21,24 +21,40 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData | ResponseError>
 ) {
-  const { body } = req;
+  try {
+    if (req.method !== "POST") {
+      handleApiError(res, { status: 405, error: "Only POST requests allowed" });
+      return;
+    }
 
-  if (!isValidBody(body)) {
-    handleApiError(res, { error: "Invalid exit", data: body });
-    return;
+    const { body } = req;
+
+    if (!isValidBody(body)) {
+      handleApiError(res, { error: "Invalid exit", data: body });
+      return;
+    }
+
+    const response = await saveExit(body.data);
+    if (!handleSupabaseApiError(res, response, { data: true })) {
+      return;
+    }
+
+    const [exit] = response.data;
+
+    const tagResponse = await saveExitTags(exit);
+    if (tagResponse && !handleSupabaseApiError(res, tagResponse)) {
+      return;
+    }
+
+    res.status(200).json({
+      type: "exit",
+      data: exit,
+    });
+  } catch (error) {
+    handleApiError(res, {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-
-  const response = await saveExit(body.data);
-  if (!handleSupabaseApiError(res, response, { count: true })) {
-    return;
-  }
-
-  const [exit] = response.data;
-
-  res.status(200).json({
-    type: "exit",
-    data: exit,
-  });
 }
 
 function isValidBody(body: any): body is RequestData {

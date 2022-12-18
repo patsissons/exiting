@@ -7,11 +7,10 @@ import {
 import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
 import { queryTable } from "services/supabase";
-import { ExitRow } from "types";
-import { logging } from "utils/logging";
+import { ExitContent } from "types";
 
 export type Props = WithErrorProps<{
-  exits: ExitRow[];
+  exits: ExitContent[];
 }>;
 
 export default function IndexPage(props: Props) {
@@ -29,11 +28,9 @@ export default function IndexPage(props: Props) {
   );
 }
 
-export async function getServerSideProps({
-  resolvedUrl,
-}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> {
-  logging.debug("D", { resolvedUrl });
-
+export async function getServerSideProps({}: GetServerSidePropsContext): Promise<
+  GetServerSidePropsResult<Props>
+> {
   const result = await queryTable("exits");
 
   if (result.error) {

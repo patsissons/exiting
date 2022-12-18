@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { useToast } from "hooks/toast";
-import { logging } from "src/utils/logging";
+import { logging } from "utils/logging";
 
 export interface ErrorProps {
   error: string;

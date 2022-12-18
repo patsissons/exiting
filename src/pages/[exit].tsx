@@ -4,38 +4,64 @@ import {
   isErrorProps,
   WithErrorProps,
 } from "components/ErrorHandler";
+import { ExitEditor } from "components/ExitEditor";
 import { ExitPresenter } from "components/ExitPresenter";
 import { PageContainer } from "components/PageContainer";
+import { useState } from "react";
 import { queryTable } from "services/supabase";
-import { ExitRow } from "types";
-import { logging } from "utils/logging";
+import { ExitContent, ExitInsert, ExitUpdate } from "types";
+import { submitExit } from "utils/api";
 
 export type Props = WithErrorProps<{
-  exit: ExitRow;
+  exit: ExitContent;
 }>;
 
 export default function ExitPage(props: Props) {
+  const [editing, setEditing] = useState(false);
+  const [updatedExit, setUpdatedExit] = useState<ExitContent>();
+
   if (isErrorProps(props)) {
     return <ErrorHandler {...props} />;
   }
 
+  const exit = updatedExit || props.exit;
+
   return (
     <PageContainer
       breadcrumbs={[{ id: "timeline", url: "/", content: "Timeline" }]}
+      primaryAction={{
+        destructive: editing,
+        content: editing ? "Cancel" : "Edit",
+        onAction: toggleEditing,
+      }}
     >
-      <ExitPresenter exit={props.exit} />
+      {editing ? (
+        <ExitEditor exit={exit} submitExit={handleSubmitExit} />
+      ) : (
+        <ExitPresenter exit={exit} />
+      )}
     </PageContainer>
   );
+
+  function toggleEditing() {
+    setEditing((value) => !value);
+  }
+
+  async function handleSubmitExit(exit: ExitInsert | ExitUpdate) {
+    const result = await submitExit(exit);
+
+    setEditing(false);
+    setUpdatedExit(result);
+
+    return result;
+  }
 }
 
 export async function getServerSideProps({
-  resolvedUrl,
   params: { exit: exitId } = {},
 }: GetServerSidePropsContext<{ exit?: string }>): Promise<
   GetServerSidePropsResult<Props>
 > {
-  logging.debug("D", { resolvedUrl, exitId });
-
   if (!exitId) {
     return {
       props: {
@@ -44,7 +70,7 @@ export async function getServerSideProps({
     };
   }
 
-  const result = await queryTable("exits").filter("id", "eq", exitId);
+  const result = await queryTable("exits").eq("id", exitId);
 
   if (result.error) {
     return {

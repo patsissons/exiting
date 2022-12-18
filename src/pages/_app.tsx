@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "next-themes";
 import { PolarisProvider } from "components/PolarisProvider";
 import { ToastsProvider } from "components/ToastsProvider";
-import { ThemeToggle } from "components/ThemeToggle";
+// import { ThemeToggle } from "components/ThemeToggle";
 
 export interface Props {
   initialSession: Session;
@@ -15,7 +15,8 @@ export default function App({ Component, pageProps }: AppProps<Props>) {
     <ThemeProvider>
       <PolarisProvider>
         <ToastsProvider>
-          <ThemeToggle />
+          {/* disabling theme toggle for now because it doesn't look good */}
+          {/* <ThemeToggle /> */}
           <Component {...pageProps} />
         </ToastsProvider>
       </PolarisProvider>

@@ -16,20 +16,24 @@ const defaultMarkdown = `
 <!--
   Welcome to exiting.fyi
     - write your anonymous exiting guidance
+    - full markdown is supported
     - add any relevant tags
-    - and post it to the world!
+    - submit your exiting message
+    - after submit, save the edit token
+    - use the edit token to submit future changes
 -->
 `.trimStart();
 
 export interface Props {
   exit?: ExitInsert | ExitUpdate;
-  post(exit: ExitInsert | ExitUpdate): Promise<ExitRow>;
+  submitExit(exit: ExitInsert | ExitUpdate): Promise<ExitRow>;
 }
 
-export function ExitEditor({ exit, post }: Props) {
+export function ExitEditor({ exit, submitExit }: Props) {
   const { show } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>();
+  const editToken = useField("");
   const {
     dirty,
     fields,
@@ -43,17 +47,29 @@ export function ExitEditor({ exit, post }: Props) {
       markdown: useField(exit?.markdown || defaultMarkdown),
       tags: useField(exit?.tags ? exit.tags.join(",") : ""),
     },
-    onSubmit: async ({ markdown, tags }) => {
+    onSubmit: async ({ markdown, tags: tagList }) => {
       try {
         setSubmitting(true);
         setSubmitError(undefined);
-        const tagList = tags.split(",").map(sanitizeTag);
-        logging.debug("submitting post", { markdown, tagList });
-        const exit = await post({ markdown, tags: tagList });
+        const tags = tagList.split(",").map(sanitizeTag);
+        const exitData = exit
+          ? ({
+              id: exit?.id,
+              edit_token: editToken.value,
+              markdown,
+              tags,
+            } as ExitUpdate)
+          : ({
+              markdown,
+              tags,
+            } as ExitInsert);
+
+        logging.debug("submitting post", exitData);
+        const submittedExit = await submitExit(exitData);
         show({
           content: "Post submitted",
           dismissible: true,
-          action: { url: `/${exit.id}`, content: "Permalink" },
+          action: { url: `/${submittedExit.id}`, content: "Permalink" },
         });
 
         return submitSuccess();
@@ -72,7 +88,7 @@ export function ExitEditor({ exit, post }: Props) {
     },
   });
 
-  const submitDisabled = submitting || !dirty;
+  const submitDisabled = isSubmitDisabled();
 
   return (
     <Card
@@ -106,9 +122,27 @@ export function ExitEditor({ exit, post }: Props) {
           id="tags"
           autoComplete="false"
           label="Tags"
+          placeholder="Comma separated list of tags"
           {...fields.tags}
         />
       </Card.Section>
+      {exit && (
+        <Card.Section>
+          <TextField
+            id="editToken"
+            autoComplete="false"
+            label="Edit Token"
+            placeholder="Enter the edit token that was generated on the first submit"
+            {...editToken}
+          />
+        </Card.Section>
+      )}
     </Card>
   );
+
+  function isSubmitDisabled() {
+    if (exit && !editToken.dirty) return true;
+
+    return submitting || !dirty;
+  }
 }

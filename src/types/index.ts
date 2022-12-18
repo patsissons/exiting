@@ -7,8 +7,12 @@ export type Tables = Schema["Tables"];
 
 type Exits = Tables["exits"];
 export type ExitRow = Exits["Row"];
-export type ExitInsert = Exits["Insert"];
-export type ExitUpdate = Exits["Update"];
+export type ExitContent = Omit<ExitRow, "edit_token">;
+export type ExitInsert = Omit<
+  Exits["Insert"],
+  "created_at" | "updated_at" | "edit_token"
+>;
+export type ExitUpdate = Omit<Exits["Update"], "created_at" | "updated_at">;
 
 type Tags = Tables["tags"];
 export type TagRow = Tags["Row"];
