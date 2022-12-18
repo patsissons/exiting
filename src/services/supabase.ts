@@ -59,7 +59,10 @@ export async function saveExitTags(exit: ExitRow) {
     ? supabase
         .from("tags")
         .upsert(
-          tags.map((name) => ({ name })),
+          tags
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+            .map((name) => ({ name })),
           { onConflict: "name" }
         )
         .select("id")

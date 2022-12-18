@@ -1,9 +1,25 @@
-/* garbage dark theme for polaris 🫣 */
+/* somewhat hacky dark theme for polaris 🫣 */
 :root[data-theme='dark'] {
-  --p-background: black;
-  --p-surface: black;
-  --p-border: white;
-  --p-text: white;
+  --p-background: invert(var(--p-background));
+  --p-surface: var(--p-surface-dark);
+  --p-surface-neutral: var(--p-surface-neutral-subdued-dark);
+  --p-surface-hovered: var(--p-surface-hovered-dark);
+  --p-surface-neutral-subdued: var(--p-surface-neutral-subdued-dark);
+  --p-surface-pressed: var(--p-surface-pressed-dark);
+  --p-surface-search-field: var(--p-surface-search-field-dark);
+  --p-surface-neutral-hovered: var(--p-surface-hovered-dark);
+  --p-border: var(--p-border-on-dark);
+  --p-divider: var(--p-divider-dark);
+  --p-icon: var(--p-icon-on-dark);
+  --p-icon-hovered: var(--p-icon-on-dark);
+  --p-icon-pressed: var(--p-icon-on-dark);
+  --p-text: var(--p-text-on-dark);
+  --p-text-subdued: var(--p-text-subdued-on-dark);
+  --p-interactive: var(--p-interactive-on-dark);
+  --p-interactive-pressed: var(--p-interactive-pressed-on-dark);
+  --p-action-secondary-hovered: var(--p-action-secondary-hovered-dark);
+  --p-action-secondary-pressed: var(--p-action-secondary-pressed-dark);
+  --p-surface-highlight-subdued: var(--p-surface-neutral-subdued-dark);
 }
 
 .theme-toggle {

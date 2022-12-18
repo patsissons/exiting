@@ -51,7 +51,11 @@ export function ExitEditor({ exit, submitExit }: Props) {
       try {
         setSubmitting(true);
         setSubmitError(undefined);
-        const tags = tagList.split(",").map(sanitizeTag);
+        const tags = tagList
+          .split(",")
+          .map((tag) => tag.trim())
+          .map(sanitizeTag)
+          .filter(Boolean);
         const exitData = exit
           ? ({
               id: exit?.id,

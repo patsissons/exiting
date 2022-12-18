@@ -8,6 +8,7 @@ import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
 import { queryTable } from "services/supabase";
 import { ExitContent } from "types";
+import { buttonFrom } from "@shopify/polaris";
 
 export type Props = WithErrorProps<{
   exits: ExitContent[];
@@ -17,7 +18,11 @@ export default function IndexPage(props: Props) {
   return (
     <PageContainer
       subtitle="Browse other exiting departure posts"
-      primaryAction={{ content: "New Exit", url: "/new" }}
+      secondaryActions={buttonFrom({
+        content: "New Exit",
+        url: "/new",
+        outline: true,
+      })}
     >
       {isErrorProps(props) ? (
         <ErrorHandler {...props} />

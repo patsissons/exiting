@@ -11,6 +11,7 @@ import { useState } from "react";
 import { queryTable } from "services/supabase";
 import { ExitContent, ExitInsert, ExitUpdate } from "types";
 import { submitExit } from "utils/api";
+import { buttonFrom } from "@shopify/polaris";
 
 export type Props = WithErrorProps<{
   exit: ExitContent;
@@ -29,11 +30,12 @@ export default function ExitPage(props: Props) {
   return (
     <PageContainer
       breadcrumbs={[{ id: "timeline", url: "/", content: "Timeline" }]}
-      primaryAction={{
+      secondaryActions={buttonFrom({
         destructive: editing,
+        outline: true,
         content: editing ? "Cancel" : "Edit",
         onAction: toggleEditing,
-      }}
+      })}
     >
       {editing ? (
         <ExitEditor exit={exit} submitExit={handleSubmitExit} />

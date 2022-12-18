@@ -14,7 +14,7 @@ export function ExitPresenter({
   return (
     <Card>
       <Card.Section>
-        <MarkdownPreview source={markdown} />
+        <MarkdownPreview style={{ padding: "0.5rem" }} source={markdown} />
       </Card.Section>
       <Card.Section>
         <Stack>
