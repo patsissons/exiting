@@ -7,6 +7,8 @@
     "conf:link": "test -f .vercel/project.json || vercel link",
     "conf:env": "./scripts/setup-env.sh",
     "conf:clean": "rm -rf .vercel .env*.local",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
