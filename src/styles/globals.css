@@ -9,10 +9,12 @@
   --p-surface-search-field: var(--p-surface-search-field-dark);
   --p-surface-neutral-hovered: var(--p-surface-hovered-dark);
   --p-border: var(--p-border-on-dark);
+  --p-border-disabled: var(--p-border-on-dark);
   --p-divider: var(--p-divider-dark);
   --p-icon: var(--p-icon-on-dark);
   --p-icon-hovered: var(--p-icon-on-dark);
   --p-icon-pressed: var(--p-icon-on-dark);
+  --p-icon-disabled: var(--p-border-on-dark);
   --p-text: var(--p-text-on-dark);
   --p-text-subdued: var(--p-text-subdued-on-dark);
   --p-interactive: var(--p-interactive-on-dark);
