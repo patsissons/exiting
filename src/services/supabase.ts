@@ -2,6 +2,7 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import moment from "moment";
 import { Database, ExitInsert, ExitRow, ExitUpdate, Tables } from "types";
 import { SUPABASE_SERVICE_KEY, SUPABASE_URL } from "utils/env";
+import { tagsFromArray } from "utils/tags";
 
 export function createClient() {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
@@ -35,13 +36,14 @@ export function saveExit(exit: ExitInsert | ExitUpdate) {
   const supabase = createClient();
 
   const exits = supabase.from("exits");
+  const tags = tagsFromArray(exit.tags);
 
   if (!isUpdate(exit)) {
-    const { markdown, tags } = exit;
+    const { markdown } = exit;
     return exits.insert({ markdown, tags }).select();
   }
 
-  const { id, edit_token, markdown, tags } = exit;
+  const { id, edit_token, markdown } = exit;
   const updated_at = moment().utc().toISOString();
 
   return exits

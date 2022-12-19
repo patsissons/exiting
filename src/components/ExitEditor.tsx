@@ -2,7 +2,7 @@ import { Card, Banner, TextField, Stack } from "@shopify/polaris";
 import { useToast } from "hooks/toast";
 import { useCallback, useEffect, useState } from "react";
 import { ExitInsert, ExitRow, ExitUpdate } from "types";
-import { sanitizeTag } from "utils/tags";
+import { MAX_TAGS_PER_EXIT, tagsFromString } from "utils/tags";
 import { logging } from "utils/logging";
 import { MarkdownEditor } from "./MarkdownEditor";
 
@@ -47,15 +47,13 @@ export function ExitEditor({ exit, submitExit }: Props) {
     setTagsField(defaultTags);
   }, [defaultMarkdown, defaultTags]);
 
+  const tags = tagsFromString(tagsField);
+
   async function submit() {
     try {
       setSubmitting(true);
       setSubmitError(undefined);
-      const tags = tagsField
-        .split(",")
-        .map((tag) => tag.trim())
-        .map(sanitizeTag)
-        .filter(Boolean);
+
       const exitData = exit
         ? ({
             id: exit?.id,
@@ -125,6 +123,11 @@ export function ExitEditor({ exit, submitExit }: Props) {
           placeholder="Comma separated list of tags"
           value={tagsField}
           onChange={setTagsField}
+          error={
+            tags.length > MAX_TAGS_PER_EXIT
+              ? `${MAX_TAGS_PER_EXIT} tags is the maximum allowed`
+              : undefined
+          }
         />
       </Card.Section>
       {exit && (
@@ -144,6 +147,7 @@ export function ExitEditor({ exit, submitExit }: Props) {
 
   function isSubmitDisabled() {
     if (exit && !editTokenField) return true;
+    if (tags.length > MAX_TAGS_PER_EXIT) return true;
 
     return submitting || !dirty;
   }
