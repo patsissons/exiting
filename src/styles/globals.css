@@ -1,0 +1,15 @@
+/* garbage dark theme for polaris 🫣 */
+:root[data-theme='dark'] {
+  --p-background: black;
+  --p-surface: black;
+  --p-border: white;
+  --p-text: white;
+}
+
+.theme-toggle {
+  position: fixed;
+  left: 50%;
+  top: 5px;
+  transform: translate(-50%, 0);
+  z-index: 1000;
+}

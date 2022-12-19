@@ -3,20 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "conf": "yarn run conf:link && yarn run conf:env",
+    "conf:link": "test -f .vercel/project.json || vercel link",
+    "conf:env": "./scripts/setup-env.sh",
+    "conf:clean": "rm -rf .vercel .env*.local",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:stats": "yarn lint:ts --format node_modules/eslint-stats/byError.js",
+    "pretty": "prettier --write '**/*.{css,scss,js,json,md,ts,tsx,yml}'",
+    "validate": "tsc --noEmit"
   },
   "dependencies": {
+    "@shopify/polaris": "^10.12.0",
+    "@shopify/react-form": "^2.4.1",
+    "@shopify/typescript-configs": "^5.1.0",
+    "@supabase/auth-helpers-nextjs": "^0.5.2",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/supabase-js": "^2.1.0",
+    "@uiw/react-markdown-editor": "^5.10.0",
+    "@uiw/react-markdown-preview": "^4.1.5",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
+    "eslint-stats": "^1.0.1",
+    "moment": "^2.29.4",
     "next": "13.0.4",
+    "next-remove-imports": "^1.0.8",
+    "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.3"
+    "react-supabase": "^0.2.0",
+    "typescript": "4.9.3",
+    "vercel": "^28.5.5"
   }
 }
