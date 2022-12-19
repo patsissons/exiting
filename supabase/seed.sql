@@ -19,6 +19,22 @@ this is the first exit
 this is the second exit
 ', ARRAY['test', 'second']);
 
+insert into public.exits (markdown)
+values
+  ('test exit 3'),
+  ('test exit 4'),
+  ('test exit 5'),
+  ('test exit 6'),
+  ('test exit 7'),
+  ('test exit 8'),
+  ('test exit 9'),
+  ('test exit 10'),
+  ('test exit 11'),
+  ('test exit 12'),
+  ('test exit 13'),
+  ('test exit 14'),
+  ('test exit 15');
+
 insert into public.exit_tags (exit_id, tag_id)
 values
   ('34b2672f-5567-430e-95e5-d994689aa531', 1),
