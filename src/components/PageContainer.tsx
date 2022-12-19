@@ -22,19 +22,17 @@ export function PageContainer({
     <Page
       title={title}
       divider={divider}
-      primaryAction={
-        <Image
-          src="/logo.svg"
-          alt="logo"
-          width={36}
-          height={36}
-          style={{ display: "block" }}
-        />
-      }
       secondaryActions={
-        <Stack>
+        <Stack spacing="extraTight">
           <ThemeToggle />
           {action && buttonFrom({ ...action, outline: true })}
+          <Image
+            src="/logo.svg"
+            alt="logo"
+            width={36}
+            height={36}
+            style={{ display: "block" }}
+          />
         </Stack>
       }
       {...props}
