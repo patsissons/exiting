@@ -27,6 +27,10 @@ export function queryTable<TableName extends string & keyof Tables>(
   }
 }
 
+export function queryExits() {
+  return queryTable("exits").neq("markdown", "");
+}
+
 export function saveExit(exit: ExitInsert | ExitUpdate) {
   const supabase = createClient();
 

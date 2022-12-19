@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ExitContent } from "types";
-import { queryTable } from "services/supabase";
+import { queryExits } from "services/supabase";
 import {
   handleApiError,
   handleSupabaseApiError,
@@ -26,7 +26,7 @@ export default async function handler(
 
     const tags = tagsFilter();
 
-    let query = queryTable("exits");
+    let query = queryExits();
     if (tags) {
       query = query.filter("tags", "cs", arrayParam(tags));
     }

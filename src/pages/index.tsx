@@ -6,7 +6,7 @@ import {
 } from "components/ErrorHandler";
 import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
-import { queryTable } from "services/supabase";
+import { queryExits } from "services/supabase";
 import { ExitContent } from "types";
 
 export type Props = WithErrorProps<{
@@ -34,7 +34,7 @@ export default function IndexPage(props: Props) {
 export async function getServerSideProps({}: GetServerSidePropsContext): Promise<
   GetServerSidePropsResult<Props>
 > {
-  const result = await queryTable("exits");
+  const result = await queryExits();
 
   if (result.error) {
     return {

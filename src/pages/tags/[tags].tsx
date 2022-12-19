@@ -8,7 +8,7 @@ import {
 import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
 import { Tags } from "components/Tags";
-import { queryTable } from "services/supabase";
+import { queryExits } from "services/supabase";
 import { ExitContent } from "types";
 import { arrayParam } from "utils/supabase";
 import { sanitizeTag } from "utils/tags";
@@ -53,11 +53,7 @@ export async function getServerSideProps({
 
   const tags = decodeURIComponent(tagsParam).split(",").map(sanitizeTag);
 
-  const result = await queryTable("exits").filter(
-    "tags",
-    "cs",
-    arrayParam(tags)
-  );
+  const result = await queryExits().filter("tags", "cs", arrayParam(tags));
 
   if (result.error) {
     return {
