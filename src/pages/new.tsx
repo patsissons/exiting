@@ -1,4 +1,4 @@
-import { Banner, Stack } from "@shopify/polaris";
+import { Banner, Stack, Text, TextContainer } from "@shopify/polaris";
 import { ExitEditor } from "components/ExitEditor";
 import { ExitPresenter } from "components/ExitPresenter";
 import { PageContainer } from "components/PageContainer";
@@ -17,7 +17,16 @@ export default function NewPage() {
       <Stack vertical>
         {exit && (
           <Banner title="Edit token" status="info">
-            {exit.edit_token}
+            <TextContainer>
+              <Text as="h2" variant="bodyLg" fontWeight="bold">
+                {exit.edit_token}
+              </Text>
+              <Text as="p" variant="bodySm" color="subdued">
+                Note this edit token, it is required to submit modifications to
+                your exit and cannot be discovered again after leaving this
+                page.
+              </Text>
+            </TextContainer>
           </Banner>
         )}
         {exit ? (
