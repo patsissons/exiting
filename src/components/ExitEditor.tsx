@@ -1,18 +1,12 @@
 import { Card, Banner, TextField, Stack } from "@shopify/polaris";
-import {
-  useField,
-  useForm,
-  submitSuccess,
-  submitFail,
-} from "@shopify/react-form";
-import { MarkdownEditor } from "./MarkdownEditor";
+import { useToast } from "hooks/toast";
+import { useCallback, useEffect, useState } from "react";
 import { ExitInsert, ExitRow, ExitUpdate } from "types";
 import { sanitizeTag } from "utils/tags";
 import { logging } from "utils/logging";
-import { useToast } from "hooks/toast";
-import { useState } from "react";
+import { MarkdownEditor } from "./MarkdownEditor";
 
-const defaultMarkdown = `
+const defaultMarkdownContent = `
 <!--
   Welcome to exiting.fyi
     - write your anonymous exiting guidance
@@ -30,67 +24,69 @@ export interface Props {
 }
 
 export function ExitEditor({ exit, submitExit }: Props) {
+  const defaultMarkdown = exit?.markdown || defaultMarkdownContent;
+  const defaultTags = exit?.tags ? exit.tags.join(",") : "";
+
   const { show } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>();
-  const editToken = useField("");
-  const {
-    dirty,
-    fields,
-    reset,
-    submit,
-    // submitErrors and submitting are not working right now
-    // submitErrors,
-    // submitting,
-  } = useForm({
-    fields: {
-      markdown: useField(exit?.markdown || defaultMarkdown),
-      tags: useField(exit?.tags ? exit.tags.join(",") : ""),
-    },
-    onSubmit: async ({ markdown, tags: tagList = "" }) => {
-      try {
-        setSubmitting(true);
-        setSubmitError(undefined);
-        const tags = tagList
-          .split(",")
-          .map((tag) => tag.trim())
-          .map(sanitizeTag)
-          .filter(Boolean);
-        const exitData = exit
-          ? ({
-              id: exit?.id,
-              edit_token: editToken.value,
-              markdown,
-              tags,
-            } as ExitUpdate)
-          : ({
-              markdown,
-              tags,
-            } as ExitInsert);
+  const [dirty, setDirty] = useState(false);
+  const [editTokenField, setEditTokenField] = useState("");
+  const [markdownField, setMarkdownField] = useState(defaultMarkdown);
+  const [tagsField, setTagsField] = useState(defaultTags);
 
-        logging.debug("submitting post", exitData);
-        const submittedExit = await submitExit(exitData);
-        show({
-          content: "Post submitted",
-          dismissible: true,
-          action: { url: `/${submittedExit.id}`, content: "Permalink" },
-        });
+  useEffect(() => {
+    const dirty =
+      markdownField !== defaultMarkdown || tagsField !== defaultTags;
 
-        return submitSuccess();
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        show({
-          content: "Post submission failed",
-          dismissible: true,
-          error: true,
-        });
-        setSubmitError(message);
-        return submitFail();
-      } finally {
-        setSubmitting(false);
-      }
-    },
-  });
+    setDirty(dirty);
+  }, [defaultMarkdown, defaultTags, markdownField, tagsField]);
+
+  const reset = useCallback(() => {
+    setMarkdownField(defaultMarkdown);
+    setTagsField(defaultTags);
+  }, [defaultMarkdown, defaultTags]);
+
+  async function submit() {
+    try {
+      setSubmitting(true);
+      setSubmitError(undefined);
+      const tags = tagsField
+        .split(",")
+        .map((tag) => tag.trim())
+        .map(sanitizeTag)
+        .filter(Boolean);
+      const exitData = exit
+        ? ({
+            id: exit?.id,
+            edit_token: editTokenField,
+            markdown: markdownField,
+            tags,
+          } as ExitUpdate)
+        : ({
+            markdown: markdownField,
+            tags,
+          } as ExitInsert);
+
+      logging.debug("submitting post", exitData);
+      const submittedExit = await submitExit(exitData);
+      show({
+        content: "Post submitted",
+        dismissible: true,
+        action: { url: `/${submittedExit.id}`, content: "Permalink" },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      show({
+        content: "Post submission failed",
+        dismissible: true,
+        error: true,
+      });
+      setSubmitError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   const submitDisabled = isSubmitDisabled();
 
@@ -116,8 +112,8 @@ export function ExitEditor({ exit, submitExit }: Props) {
             minHeight="500px"
             visible
             editable={!submitting}
-            value={fields.markdown.value}
-            onChange={fields.markdown.onChange}
+            value={markdownField}
+            onChange={setMarkdownField}
           />
         </Stack>
       </Card.Section>
@@ -127,7 +123,8 @@ export function ExitEditor({ exit, submitExit }: Props) {
           autoComplete="false"
           label="Tags"
           placeholder="Comma separated list of tags"
-          {...fields.tags}
+          value={tagsField}
+          onChange={setTagsField}
         />
       </Card.Section>
       {exit && (
@@ -137,7 +134,8 @@ export function ExitEditor({ exit, submitExit }: Props) {
             autoComplete="false"
             label="Edit Token"
             placeholder="Enter the edit token that was generated on the first submit"
-            {...editToken}
+            value={editTokenField}
+            onChange={setEditTokenField}
           />
         </Card.Section>
       )}
@@ -145,7 +143,7 @@ export function ExitEditor({ exit, submitExit }: Props) {
   );
 
   function isSubmitDisabled() {
-    if (exit && !editToken.dirty) return true;
+    if (exit && !editTokenField) return true;
 
     return submitting || !dirty;
   }

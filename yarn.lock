@@ -790,26 +790,6 @@
     react-fast-compare "^3.2.0"
     react-transition-group "^4.4.2"
 
-"@shopify/predicates@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@shopify/predicates/-/predicates-3.0.1.tgz#c09c3d6c65d462d6bc9ac54a4f1b1895d29ce59b"
-  integrity sha512-Q6awrbeIwfJ/duJqNy9n2CPSBKhDPIpa60va472Q2VgKaEH5Rrzi6aZjabLeVVrLKl2V+YF96GS/4GzOV5I5cg==
-
-"@shopify/react-form@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@shopify/react-form/-/react-form-2.4.1.tgz#5a24da37fc969793ddb716bd393e42ff3eaf3e16"
-  integrity sha512-8F9Gs9dyz3JXS6ng8M11lUJvJInBtiSz49FzSejXxXFRT/OT/tjg3X3RGn1y+QAzglxkP/xZOK+/tLlpb+vX5Q==
-  dependencies:
-    "@shopify/predicates" "^3.0.1"
-    "@shopify/react-hooks" "^3.0.2"
-    fast-deep-equal "^3.1.3"
-    get-value "^3.0.1"
-
-"@shopify/react-hooks@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@shopify/react-hooks/-/react-hooks-3.0.2.tgz#6c55be09216cd889c76a9c84f51c32d8a3af6251"
-  integrity sha512-zfo4vgB5k4jwOWmwJJxaYkDRJs/Yf+D7RlxVZDmZukiXqD/42m0wP3az3+wq74AjPf3PyG8GcOl2Z3d79Y4nEw==
-
 "@shopify/typescript-configs@^5.1.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@shopify/typescript-configs/-/typescript-configs-5.1.0.tgz#f6e8fdd3291bf0a406578b2c6eb21f8c542d3c0a"
@@ -2596,13 +2576,6 @@ get-tsconfig@^4.2.0:
   resolved "https://registry.yarnpkg.com/get-tsconfig/-/get-tsconfig-4.2.0.tgz#ff368dd7104dab47bf923404eb93838245c66543"
   integrity sha512-X8u8fREiYOE6S8hLbq99PeykTDoLVnxvF4DjWKJmz9xy2nNRdUcV8ZN9tniJFeKyTU3qnC9lL8n4Chd6LmVKHg==
 
-get-value@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/get-value/-/get-value-3.0.1.tgz#5efd2a157f1d6a516d7524e124ac52d0a39ef5a8"
-  integrity sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA==
-  dependencies:
-    isobject "^3.0.1"
-
 github-slugger@^1.1.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/github-slugger/-/github-slugger-1.5.0.tgz#17891bbc73232051474d68bd867a34625c955f7d"
@@ -3180,11 +3153,6 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
-
-isobject@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
-  integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
 js-sdsl@^4.1.4:
   version "4.1.5"
