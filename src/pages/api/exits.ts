@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ExitContent } from "types";
-import { queryExits } from "services/supabase";
+import { DEFAULT_PAGE_SIZE, queryExits } from "services/supabase";
 import {
   handleApiError,
   handleSupabaseApiError,
@@ -26,7 +26,7 @@ export default async function handler(
 
     const tags = tagsFilter();
 
-    let query = queryExits();
+    let query = queryExits({ pageSize: count() });
     if (tags) {
       query = query.filter("tags", "cs", arrayParam(tags));
     }
@@ -46,6 +46,16 @@ export default async function handler(
     handleApiError(res, {
       error: error instanceof Error ? error.message : "Unknown error",
     });
+  }
+
+  function count() {
+    const value = Array.isArray(req.query.count)
+      ? req.query.count[req.query.count.length - 1]
+      : req.query.count;
+
+    if (!value) return DEFAULT_PAGE_SIZE;
+
+    return Number(value);
   }
 
   function tagsFilter() {

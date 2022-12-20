@@ -22,14 +22,36 @@ export function queryTable<TableName extends string & keyof Tables>(
   switch (table) {
     case "exits":
       // exclude the edit_token
-      return query.select("id, created_at, updated_at, markdown, tags");
+      return query.select("id, created_at, updated_at, markdown, tags", {
+        count: "exact",
+      });
     default:
       return query.select();
   }
 }
 
-export function queryExits() {
-  return queryTable("exits").neq("markdown", "");
+export const DEFAULT_PAGE_SIZE = 5;
+
+export interface QueryExitsOptions {
+  after?: string;
+  before?: string;
+  pageSize?: number;
+}
+
+export function queryExits({
+  after,
+  before,
+  pageSize = DEFAULT_PAGE_SIZE,
+}: QueryExitsOptions = {}) {
+  let query = queryTable("exits").neq("markdown", "");
+
+  if (after) {
+    query = query.gt("created_at", after);
+  } else if (before) {
+    query = query.lt("created_at", before);
+  }
+
+  return query.order("created_at", { ascending: false }).limit(pageSize);
 }
 
 export function saveExit(exit: ExitInsert | ExitUpdate) {

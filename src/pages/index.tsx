@@ -6,11 +6,13 @@ import {
 } from "components/ErrorHandler";
 import { ExitTimeline } from "components/ExitTimeline";
 import { PageContainer } from "components/PageContainer";
-import { queryExits } from "services/supabase";
+import { DEFAULT_PAGE_SIZE, queryExits } from "services/supabase";
 import { ExitContent } from "types";
+import { paginationOptions } from "utils/pagination";
 
 export type Props = WithErrorProps<{
   exits: ExitContent[];
+  count: number;
 }>;
 
 export default function IndexPage(props: Props) {
@@ -25,16 +27,20 @@ export default function IndexPage(props: Props) {
       {isErrorProps(props) ? (
         <ErrorHandler {...props} />
       ) : (
-        <ExitTimeline exits={props.exits} />
+        <ExitTimeline
+          exits={props.exits}
+          count={props.count}
+          pageSize={DEFAULT_PAGE_SIZE}
+        />
       )}
     </PageContainer>
   );
 }
 
-export async function getServerSideProps({}: GetServerSidePropsContext): Promise<
-  GetServerSidePropsResult<Props>
-> {
-  const result = await queryExits();
+export async function getServerSideProps({
+  query,
+}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> {
+  const result = await queryExits(paginationOptions(query));
 
   if (result.error) {
     return {
@@ -48,6 +54,7 @@ export async function getServerSideProps({}: GetServerSidePropsContext): Promise
   return {
     props: {
       exits: result.data,
+      count: result.count || 0,
     },
   };
 }
