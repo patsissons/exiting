@@ -70,7 +70,7 @@ export async function getServerSideProps({
     };
   }
 
-  const result = await queryTable("exits").eq("id", exitId);
+  const result = await queryTable("exits").eq("id", exitId).single();
 
   if (result.error) {
     return {
@@ -83,7 +83,7 @@ export async function getServerSideProps({
 
   return {
     props: {
-      exit: result.data[0],
+      exit: result.data,
     },
   };
 }

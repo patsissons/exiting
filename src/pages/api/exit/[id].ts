@@ -24,14 +24,14 @@ export default async function handler(
 
     const id = String(req.query.id);
 
-    const result = await queryTable("exits").eq("id", id);
+    const result = await queryTable("exits").eq("id", id).single();
     if (!handleSupabaseApiError(res, result, { data: true })) {
       return;
     }
 
     res.status(200).json({
       type: "exit",
-      data: result.data[0],
+      data: result.data,
     });
   } catch (error) {
     handleApiError(res, {
