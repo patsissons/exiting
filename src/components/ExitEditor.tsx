@@ -1,9 +1,10 @@
-import { Card, Banner, TextField, Stack } from "@shopify/polaris";
+import { Card, Banner, TextField, Stack, InlineError } from "@shopify/polaris";
 import { useToast } from "hooks/toast";
 import { useCallback, useEffect, useState } from "react";
 import { ExitInsert, ExitRow, ExitUpdate } from "types";
-import { MAX_TAGS_PER_EXIT, tagsFromString } from "utils/tags";
+import { MAX_EXIT_CONTENT_LENGTH } from "utils/exits";
 import { logging } from "utils/logging";
+import { MAX_TAGS_PER_EXIT, tagsFromString } from "utils/tags";
 import { MarkdownEditor } from "./MarkdownEditor";
 
 const defaultMarkdownContent = `
@@ -113,6 +114,16 @@ export function ExitEditor({ exit, submitExit }: Props) {
             value={markdownField}
             onChange={setMarkdownField}
           />
+          {markdownField.length > MAX_EXIT_CONTENT_LENGTH ? (
+            <InlineError
+              message={`Markdown content is too long (${
+                markdownField.length
+              } chars), max allowed is ${Math.floor(
+                MAX_EXIT_CONTENT_LENGTH / 1024
+              )}KB `}
+              fieldID="markdown"
+            />
+          ) : undefined}
         </Stack>
       </Card.Section>
       <Card.Section>
@@ -148,6 +159,7 @@ export function ExitEditor({ exit, submitExit }: Props) {
   function isSubmitDisabled() {
     if (exit && !editTokenField) return true;
     if (tags.length > MAX_TAGS_PER_EXIT) return true;
+    if (markdownField.length > MAX_EXIT_CONTENT_LENGTH) return true;
 
     return submitting || !dirty;
   }

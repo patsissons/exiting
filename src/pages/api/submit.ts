@@ -6,6 +6,7 @@ import {
   handleSupabaseApiError,
   ResponseError,
 } from "utils/api";
+import { MAX_EXIT_CONTENT_LENGTH } from "src/utils/exits";
 
 export interface RequestData {
   type: "exit";
@@ -31,6 +32,14 @@ export default async function handler(
 
     if (!isValidBody(body)) {
       handleApiError(res, { error: "Invalid exit", data: body });
+      return;
+    }
+
+    if (
+      body.data.markdown &&
+      body.data.markdown?.length > MAX_EXIT_CONTENT_LENGTH
+    ) {
+      handleApiError(res, { error: "Markdown content too large", data: body });
       return;
     }
 

@@ -4,6 +4,11 @@ Browse and post anonymous exiting guidance. If you are exiting your company and 
 
 - Open [exiting.fyi](https://exiting.fyi/) to view, post, and modify exits.
 
+## Limitations
+
+- markdown is limited to `10KB` of content
+- exit tags are limited to `25` unique tags
+
 ## Editing exits
 
 When posting a new exit, an edit token is generated that can be used to modify an already posted exit. You must make note of this edit token as it's generated on posting a new exit and never displayed again.
