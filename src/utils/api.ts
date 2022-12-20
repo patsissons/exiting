@@ -1,4 +1,7 @@
-import type { PostgrestResponse } from "@supabase/supabase-js";
+import type {
+  PostgrestResponse,
+  PostgrestSingleResponse,
+} from "@supabase/supabase-js";
 import type { NextApiResponse } from "next/types";
 import { ExitInsert, ExitRow, ExitUpdate } from "types";
 import { logging } from "./logging";
@@ -36,9 +39,19 @@ export interface HandleSupabaseErrorOptions {
 
 export function handleSupabaseApiError<T>(
   res: NextApiResponse<ResponseError>,
+  response: PostgrestSingleResponse<T>,
+  options?: HandleSupabaseErrorOptions
+): response is PostgrestSingleResponse<T> & { data: T };
+export function handleSupabaseApiError<T>(
+  res: NextApiResponse<ResponseError>,
   response: PostgrestResponse<T>,
+  options?: HandleSupabaseErrorOptions
+): response is PostgrestResponse<T> & { data: T[] };
+export function handleSupabaseApiError<T>(
+  res: NextApiResponse<ResponseError>,
+  response: PostgrestResponse<T> | PostgrestSingleResponse<T>,
   options: HandleSupabaseErrorOptions = {}
-): response is PostgrestResponse<T> & { data: T[] } {
+): boolean {
   const { data, error } = response;
 
   if (error) {
@@ -46,7 +59,7 @@ export function handleSupabaseApiError<T>(
     return false;
   }
 
-  if (options.data && (!data || data.length === 0)) {
+  if (options.data && (!data || (Array.isArray(data) && data.length === 0))) {
     res.status(500).json(responseError());
     return false;
   }
