@@ -102,9 +102,11 @@ export async function saveExitTags(exit: ExitRow) {
   const exitTagResponse = await exitTags.delete().eq("exit_id", exit.id);
   if (exitTagResponse.error) return exitTagResponse;
 
-  const tagIds = tagResponse?.data?.map(({ id }) => id);
+  const tagIds = tagResponse?.data?.map(({ id }: { id: string }) => id);
   if (tagIds) {
     const exit_id = exit.id;
-    return exitTags.insert(tagIds.map((tag_id) => ({ exit_id, tag_id })));
+    return exitTags.insert(
+      tagIds.map((tag_id: string) => ({ exit_id, tag_id }))
+    );
   }
 }

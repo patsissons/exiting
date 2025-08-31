@@ -48,7 +48,7 @@ export default async function handler(
       return;
     }
 
-    const [exit] = response.data;
+    const [exit] = response.data as ExitRow[];
 
     const tagResponse = await saveExitTags(exit);
     if (tagResponse && !handleSupabaseApiError(res, tagResponse)) {

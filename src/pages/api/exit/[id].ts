@@ -31,7 +31,7 @@ export default async function handler(
 
     res.status(200).json({
       type: "exit",
-      data: result.data,
+      data: result.data as ExitContent,
     });
   } catch (error) {
     handleApiError(res, {

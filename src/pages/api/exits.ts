@@ -40,7 +40,7 @@ export default async function handler(
 
     res.status(200).json({
       type: "exits",
-      data,
+      data: data as ExitContent[],
     });
   } catch (error) {
     handleApiError(res, {
