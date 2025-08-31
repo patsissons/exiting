@@ -2,12 +2,17 @@
   "name": "exiting",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "pnpm": "^10",
+    "node": "^22"
+  },
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
-    "conf": "yarn run conf:link && yarn run conf:env",
+    "conf": "pnpm run conf:link && pnpm run conf:env",
     "conf:link": "test -f .vercel/project.json || vercel link",
     "conf:env": "./scripts/setup-env.sh",
     "conf:clean": "rm -rf .vercel .env*.local",
-    "db": "yarn run db:start",
+    "db": "pnpm run db:start",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:status": "supabase status",
@@ -16,13 +21,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:stats": "yarn lint:ts --format node_modules/eslint-stats/byError.js",
+    "lint:stats": "pnpm lint:ts --format node_modules/eslint-stats/byError.js",
     "pretty": "prettier --write '**/*.{css,scss,js,json,md,ts,tsx,yml}'",
     "validate": "tsc --noEmit"
   },
   "dependencies": {
     "@shopify/polaris": "^10.12.0",
-    "@supabase/supabase-js": "^2.1.0",
+    "@supabase/supabase-js": "2.1.0",
     "@uiw/react-markdown-editor": "^5.10.0",
     "@uiw/react-markdown-preview": "^4.1.5",
     "moment": "^2.29.4",
@@ -44,6 +49,6 @@
     "vercel": "^28.5.5"
   },
   "optionalDependencies": {
-    "supabase": "^1.26.5"
+    "supabase": "1.26.9"
   }
 }
